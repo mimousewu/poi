@@ -1,0 +1,74 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.cbean</groupId>
+    <artifactId>poi</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>POI helper</name>
+    <description>POI helper</description>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <skip.unit.tests>false</skip.unit.tests>
+        <version.java>1.8</version.java>
+        <version.compiler.plugin>3.2</version.compiler.plugin>
+        <version.surefire.plugin>2.18.1</version.surefire.plugin>
+        <version.junit>4.12</version.junit>
+
+        <apache.poi.version>3.17</apache.poi.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${apache.poi.version}</version>
+            <scope>provided</scope>
+        </dependency>        
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${apache.poi.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${version.surefire.plugin}</version>
+                <configuration>
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <redirectTestOutputToFile>false</redirectTestOutputToFile>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${version.compiler.plugin}</version>
+                <configuration>
+                    <source>${version.java}</source>
+                    <target>${version.java}</target>
+                    <fork>true</fork>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

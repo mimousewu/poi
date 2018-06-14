@@ -1,0 +1,12 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# production
+/target
+/build
+
+# misc
+.DS_Store
+
+#Idea files
+.idea/
+*.iml
