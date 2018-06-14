@@ -27,7 +27,7 @@ public abstract class AbstractPoiSheetHelper implements SheetHelper {
             @Override
             public String parse(Cell cell) {
                 String value = null;
-                if (DateUtil.isCellDateFormatted(cell)) {
+                if (CellType.NUMERIC.equals(cell.getCellTypeEnum()) && DateUtil.isCellDateFormatted(cell)) {
                     Date date = cell.getDateCellValue();
                     value = new CellDateFormatter(cell.getCellStyle().getDataFormatString()).format(date);
                 } else {
