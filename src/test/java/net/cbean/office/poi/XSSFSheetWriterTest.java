@@ -1,17 +1,21 @@
 package net.cbean.office.poi;
 
-import net.cbean.office.poi.XSSFSheetWriter;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class XSSFSheetWriterTest {
@@ -29,9 +33,10 @@ public class XSSFSheetWriterTest {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
+        String outputExcel = "target/test.xlsx";
         try {
-            fos = new FileOutputStream("sxssf.xlsx");
+            fos = new FileOutputStream(outputExcel);
             wb.write(fos);
         } catch (IOException e) {
             e.printStackTrace();
@@ -48,7 +53,30 @@ public class XSSFSheetWriterTest {
             }
         } catch (IOException e) {
         }
-        assertTrue(false);
+        assertOutputExcel(outputExcel);
+    }
+
+    private void assertOutputExcel(String outputExcel) throws Exception {
+        File outFile = new File(outputExcel);
+        FileInputStream in = new FileInputStream(outFile);
+        Sheet sheet = new XSSFWorkbook(in).getSheetAt(0);
+        assertEquals("Name", sheet.getRow(0).getCell(0).getStringCellValue());
+        assertEquals("desc", sheet.getRow(0).getCell(1).getStringCellValue());
+        assertEquals("Num", sheet.getRow(0).getCell(2).getStringCellValue());
+
+        assertEquals("a", sheet.getRow(1).getCell(0).getStringCellValue());
+        assertEquals("b", sheet.getRow(1).getCell(1).getStringCellValue());
+        assertTrue(sheet.getRow(1).getCell(2).getNumericCellValue() == 1d);
+
+        assertEquals("a1", sheet.getRow(2).getCell(0).getStringCellValue());
+        assertEquals("b1", sheet.getRow(2).getCell(1).getStringCellValue());
+        assertTrue(sheet.getRow(2).getCell(2).getNumericCellValue() == 2d);
+
+        assertEquals("a2", sheet.getRow(3).getCell(0).getStringCellValue());
+        assertEquals("b2", sheet.getRow(3).getCell(1).getStringCellValue());
+        assertTrue(sheet.getRow(3).getCell(2).getNumericCellValue() == 3d);
+
+        outFile.delete();
     }
 
     @Test
