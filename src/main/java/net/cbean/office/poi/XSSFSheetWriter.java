@@ -13,34 +13,58 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class XSSFSheetWriter implements SheetWriter {
-    private SXSSFSheet sheet;
+    protected SXSSFSheet sheet;
+    protected String[] headers;
+    protected String[] headerLabels;
     private int rowIndex = 0;
-    private String[] headers;
 
     /**
      * key: header
      */
     private Map<String, CellStyleWriter> cellStyleWriters = new HashMap<>();
+    private Map<String, CellStyleWriter> headerStyleWriters = new HashMap<>();
 
     public XSSFSheetWriter(SXSSFSheet sh, String[] header) {
         this.sheet = sh;
         this.headers = header;
-        init();
     }
 
-    private void init() {
-        this.sheet.setRandomAccessWindowSize(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
-        Row row = this.sheet.createRow(nextRowIndex());
-        for (int i = 0; i < headers.length; i++) {
-            Cell cell = row.createCell(i);
-            cell.setCellValue(headers[i]);
+    public XSSFSheetWriter(SXSSFSheet sh, String[] header, String[] headerLabel) {
+        this.sheet = sh;
+        this.headers = header;
+        this.headerLabels = headerLabel;
+        if (header.length != headerLabel.length) {
+            throw new IllegalArgumentException("Size of headerLabel is not match the size of header!");
         }
     }
 
-    public void setCellStyleWriter(String header, CellStyleWriter cellStyleWriter) {
-        this.cellStyleWriters.put(header, cellStyleWriter);
+    @Override
+    public XSSFSheetWriter init() {
+        this.sheet.setRandomAccessWindowSize(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        Row row = this.sheet.createRow(nextRowIndex());
+        for (int i = 0; i < this.headers.length; i++) {
+            Cell cell = row.createCell(i);
+            String header = headers[i];
+            if (this.headerStyleWriters.containsKey(header)) {
+                this.headerStyleWriters.get(header).handleCellStyle(cell);
+            }
+            cell.setCellValue(headerLabels == null ? header : headerLabels[i]);
+        }
+        return this;
     }
 
+    @Override
+    public XSSFSheetWriter setStyleWriter(String header, CellStyleWriter... cellStyleWriter) {
+        if (cellStyleWriter.length >= 1 && cellStyleWriter[0] != null) {
+            this.headerStyleWriters.put(header, cellStyleWriter[0]);
+        }
+        if (cellStyleWriter.length >= 2 && cellStyleWriter[1] != null) {
+            this.cellStyleWriters.put(header, cellStyleWriter[1]);
+        }
+        return this;
+    }
+
+    @Override
     public void addRow(RowHandler valueHandler) {
         Row row = this.sheet.createRow(nextRowIndex());
         for (int i = 0; i < headers.length; i++) {
@@ -107,7 +131,7 @@ public class XSSFSheetWriter implements SheetWriter {
         }
     }
 
-    private int nextRowIndex() {
+    protected int nextRowIndex() {
         return this.rowIndex++;
     }
 
