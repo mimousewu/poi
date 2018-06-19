@@ -29,7 +29,7 @@ public class XSSFSheetWriterTest {
 
         String[] headers = new String[]{"Name", "desc", "Num"};
         SXSSFSheet sh = wb.createSheet("sheet1");
-        sheetWriter = new XSSFSheetWriter(sh, headers);
+        sheetWriter = new XSSFSheetWriter(sh, headers).init();
     }
 
     @After
