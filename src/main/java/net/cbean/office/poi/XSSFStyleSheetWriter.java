@@ -25,6 +25,9 @@ public class XSSFStyleSheetWriter extends XSSFSheetWriter {
     public XSSFStyleSheetWriter(SXSSFSheet sh, String[] header, String[] headerLabel, File styleTemplate) {
         this.sheet = sh;
         this.headers = header;
+        if(header.length != headerLabel.length) {
+            throw new IllegalArgumentException("Size of headerLabel is not match the size of header!");
+        }
 
         if (styleTemplate != null) {
             loadStyle(styleTemplate);
@@ -51,6 +54,7 @@ public class XSSFStyleSheetWriter extends XSSFSheetWriter {
                 CellStyle cellStyle = tempSheet.getRow(1).getCell(i).getCellStyle();
                 super.setCellStyleWriter(this.headers[i], cell -> cell.setCellStyle(cellStyle));
             }
+            in.close();
         } catch (IOException e) {
             throw new IllegalArgumentException("Failed to load style form file: "
                     + styleTemplate.getAbsolutePath(), e);
