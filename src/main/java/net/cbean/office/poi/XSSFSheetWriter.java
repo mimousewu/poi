@@ -43,12 +43,43 @@ public class XSSFSheetWriter implements SheetWriter {
         this.sheet.setRandomAccessWindowSize(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         Row row = this.sheet.createRow(nextRowIndex());
         for (int i = 0; i < this.headers.length; i++) {
+public class XSSFSheetWriter implements SheetWriter {
+    protected SXSSFSheet sheet;
+    protected String[] headers;
+    protected String[] headerLabels;
+    private int rowIndex = 0;
+
+    /**
+     * key: header
+     */
+    private Map<String, CellStyleWriter> cellStyleWriters = new HashMap<>();
+    private Map<String, CellStyleWriter> headerStyleWriters = new HashMap<>();
+
+    public XSSFSheetWriter(SXSSFSheet sh, String[] header) {
+        this.sheet = sh;
+        this.headers = header;
+    }
+
+    public XSSFSheetWriter(SXSSFSheet sh, String[] header, String[] headerLabel) {
+        this.sheet = sh;
+        this.headers = header;
+        this.headerLabels = headerLabel;
+        if (header.length != headerLabel.length) {
+            throw new IllegalArgumentException("Size of headerLabel is not match the size of header!");
+        }
+    }
+
+    @Override
+    public XSSFSheetWriter init() {
+        this.sheet.setRandomAccessWindowSize(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        Row row = this.sheet.createRow(nextRowIndex());
+        for (int i = 0; i < this.headers.length; i++) {
             Cell cell = row.createCell(i);
             String header = headers[i];
+            cell.setCellValue(headerLabels == null ? header : headerLabels[i]);
             if (this.headerStyleWriters.containsKey(header)) {
                 this.headerStyleWriters.get(header).handleCellStyle(cell);
             }
-            cell.setCellValue(headerLabels == null ? header : headerLabels[i]);
         }
         return this;
     }
@@ -70,10 +101,10 @@ public class XSSFSheetWriter implements SheetWriter {
         for (int i = 0; i < headers.length; i++) {
             Cell cell = row.createCell(i);
             String header = headers[i];
+            fillValue(cell, valueHandler.cellValue(header, i));
             if (this.cellStyleWriters.containsKey(header)) {
                 this.cellStyleWriters.get(header).handleCellStyle(cell);
             }
-            fillValue(cell, valueHandler.cellValue(header, i));
         }
     }
 
