@@ -158,7 +158,7 @@ public class XSSFSheetWriter implements SheetWriter {
         } else if (value instanceof RichTextString) {
             cell.setCellValue((RichTextString) value);
         } else {
-            cell.setCellValue(value.toString());
+            cell.setCellValue(Optional.ofNullable(value).orElse("").toString());
         }
     }
 
