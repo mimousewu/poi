@@ -1,5 +1,6 @@
 package net.cbean.office.poi;
 
+import net.cbean.office.RowData;
 import net.cbean.office.SheetHelper;
 import org.apache.poi.ss.format.CellDateFormatter;
 import org.apache.poi.ss.usermodel.*;
@@ -96,7 +97,7 @@ public abstract class AbstractPoiSheetHelper implements SheetHelper {
 
     }
 
-    private int getRealRowIndex(int rowIndex) {
+    int getRealRowIndex(int rowIndex) {
         return rowIndex + columnNameRow + 1;
     }
 
@@ -181,5 +182,10 @@ public abstract class AbstractPoiSheetHelper implements SheetHelper {
                 return iterator;
             }
         }.spliterator(), false);
+    }
+
+    @Override
+    public RowData rowData() {
+        return new RowDataHelper(this);
     }
 }

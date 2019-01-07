@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public interface SheetHelper {
-    public static final int DEFAULT_COLUMN_NAME_ROW = 0;
+    int DEFAULT_COLUMN_NAME_ROW = 0;
 
     int getRows();
 
@@ -48,6 +48,8 @@ public interface SheetHelper {
 
     void iterate(Visitor visitor);
 
+    RowData rowData();
+
     /**
      * @param visitor
      * @param start
@@ -57,12 +59,12 @@ public interface SheetHelper {
     boolean iterate(Visitor visitor, int start, int offset);
 
     @FunctionalInterface
-    public interface Visitor {
+    interface Visitor {
         void visit(Map<String, String> row, Integer rowIndex);
     }
 
     @FunctionalInterface
-    public interface CellParser {
+    interface CellParser {
         String parse(Cell cell);
     }
 }
