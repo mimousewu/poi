@@ -11,8 +11,12 @@ public interface RowData {
 
     Iterator<String[]> iterator();
 
+    Stream<CellData> cellStream();
+
+    Iterator<CellData> cellIterator();
+
     @FunctionalInterface
     interface CellData {
-        String data(int offset);
+        String data(int start, int offset);
     }
 }

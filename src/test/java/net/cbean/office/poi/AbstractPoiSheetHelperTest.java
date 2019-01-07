@@ -47,6 +47,12 @@ public class AbstractPoiSheetHelperTest {
     }
 
     @Test
+    public void testRowDataGetValue() throws Exception {
+        assertEquals("Value2", helper.rowData().getValue(0,0));
+        assertEquals("Value22", helper.rowData().getValue(1,0));
+    }
+
+    @Test
     public void testGetRowValue() throws Exception {
         assertEquals("Value2", helper.getRowValue(0).get("Column2"));
         assertEquals("Value22", helper.getRowValue(1).get("Column2"));
@@ -145,5 +151,12 @@ public class AbstractPoiSheetHelperTest {
     @Test
     public void testStream() throws Exception {
         assertFalse(helper.stream().anyMatch(row -> row.isEmpty()));
+    }
+
+    @Test
+    public void testCellStream() throws Exception {
+        String value = helper.rowData().cellStream()
+                .findFirst().map(cellData -> cellData.data(0, 0)).orElse(null);
+        assertEquals("Value2", value);
     }
 }

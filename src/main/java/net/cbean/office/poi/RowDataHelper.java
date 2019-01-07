@@ -22,7 +22,7 @@ public class RowDataHelper implements RowData {
             return null;
         }
 
-        return Optional.ofNullable(row.getCell(colIndex)).map(
+        return Optional.ofNullable(row.getCell(colIndex + 1)).map(
                 c -> sheetHelper.cellParser.parse(c)).orElse(null);
     }
 
@@ -52,6 +52,48 @@ public class RowDataHelper implements RowData {
 
                 position++;
                 return data;
+            }
+
+            public void remove() {
+                throw new IllegalStateException(
+                        "can't remove row from Excel sheet");
+            }
+
+        };
+    }
+
+    @Override
+    public Stream<CellData> cellStream() {
+        Iterator<CellData> iterator = cellIterator();
+
+        return StreamSupport.stream((
+                (Iterable<CellData>) () -> iterator)
+                .spliterator(), false);
+    }
+
+    @Override
+    public Iterator<CellData> cellIterator() {
+        return new Iterator<CellData>() {
+            private int position = 0;
+
+            public boolean hasNext() {
+                return position < sheetHelper.getRows();
+            }
+
+            public CellData next() {
+                Row row = sheetHelper.getRow(sheetHelper.getRealRowIndex(position));
+
+                CellData cellData = (start, offset) -> {
+                    if (row == null) {
+                        return null;
+                    }
+                    int index = start + offset + 1;
+                    return Optional.ofNullable(row.getCell(index)).map(
+                            c -> sheetHelper.cellParser.parse(c)).orElse(null);
+                };
+
+                position++;
+                return cellData;
             }
 
             public void remove() {
