@@ -156,7 +156,7 @@ public class AbstractPoiSheetHelperTest {
     @Test
     public void testCellStream() throws Exception {
         String value = helper.rowData().cellStream()
-                .findFirst().map(cellData -> cellData.data(0, 0)).orElse(null);
+                .findFirst().map(cellData -> cellData.data(1, 0)).orElse(null);
         assertEquals("Value2", value);
 
         value = helper.rowData().cellStream()

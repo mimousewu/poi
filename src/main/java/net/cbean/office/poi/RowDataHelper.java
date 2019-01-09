@@ -89,7 +89,7 @@ public class RowDataHelper implements RowData {
                         if (row == null) {
                             return null;
                         }
-                        int index = start + offset + 1;
+                        int index = start + offset;
                         return Optional.ofNullable(row.getCell(index)).map(
                                 c -> sheetHelper.cellParser.parse(c)).orElse(null);
                     }
