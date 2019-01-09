@@ -161,6 +161,6 @@ public class AbstractPoiSheetHelperTest {
 
         value = helper.rowData().cellStream()
                 .findFirst().map(cellData -> cellData.data("Column2")).orElse(null);
-        assertEquals("Value22", value);
+        assertEquals("Value2", value);
     }
 }

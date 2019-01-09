@@ -96,7 +96,7 @@ public class RowDataHelper implements RowData {
 
                     @Override
                     public String data(String colName) {
-                        return sheetHelper.getValue(colName, position);
+                        return sheetHelper.getValue(colName, position -1);
                     }
                 };
 
