@@ -15,8 +15,8 @@ public interface RowData {
 
     Iterator<CellData> cellIterator();
 
-    @FunctionalInterface
     interface CellData {
         String data(int start, int offset);
+        String data(String colName);
     }
 }

@@ -83,13 +83,21 @@ public class RowDataHelper implements RowData {
             public CellData next() {
                 Row row = sheetHelper.getRow(sheetHelper.getRealRowIndex(position));
 
-                CellData cellData = (start, offset) -> {
-                    if (row == null) {
-                        return null;
+                CellData cellData = new CellData() {
+                    @Override
+                    public String data(int start, int offset) {
+                        if (row == null) {
+                            return null;
+                        }
+                        int index = start + offset + 1;
+                        return Optional.ofNullable(row.getCell(index)).map(
+                                c -> sheetHelper.cellParser.parse(c)).orElse(null);
                     }
-                    int index = start + offset + 1;
-                    return Optional.ofNullable(row.getCell(index)).map(
-                            c -> sheetHelper.cellParser.parse(c)).orElse(null);
+
+                    @Override
+                    public String data(String colName) {
+                        return sheetHelper.getValue(colName, position);
+                    }
                 };
 
                 position++;

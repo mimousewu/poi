@@ -158,5 +158,9 @@ public class AbstractPoiSheetHelperTest {
         String value = helper.rowData().cellStream()
                 .findFirst().map(cellData -> cellData.data(0, 0)).orElse(null);
         assertEquals("Value2", value);
+
+        value = helper.rowData().cellStream()
+                .findFirst().map(cellData -> cellData.data("Column2")).orElse(null);
+        assertEquals("Value22", value);
     }
 }
